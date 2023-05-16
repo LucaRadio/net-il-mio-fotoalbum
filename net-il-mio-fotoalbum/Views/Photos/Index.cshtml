@@ -1,0 +1,60 @@
+﻿@model List<Photo>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="text-center">
+        <form asp-controller="Photos" asp-action="Index" class="justify-content-center d-flex mb-3">
+            <input name="search" class="form-control w-auto" id="input" />
+            <button class="btn btn-dark">Search</button>
+        </form>
+
+        <div class="row row-cols-4">
+
+            @foreach (Photo i in Model)
+            {
+                <div class="col">
+                    <div class="card">
+                        <img class="card-img-top" src="data:image/jpg;base64,@i.ImageData" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@i.Title</h5>
+                            <p class="card-text">@((i.Description.Length > 50) ? i.Description.Substring(0, 50) + " ..." : i.Description)</p>
+                            <div>
+                                <a href="@Url.Action("Edit","Photos", new{id = i.Id})" class="btn btn-warning">Edit</a>
+                                <a href="@Url.Action("Show","Photos", new{id = i.Id})" class="btn btn-primary">Details</a>
+                                <form asp-controller="Photos" asp-route-id="@i.Id" asp-action="Delete" method="post" class="d-inline-block">
+                                    @Html.AntiForgeryToken()
+
+                                    <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+        <div class="justify-content-center d-flex mb-3">
+            <input class="form-control w-auto" id="input" />
+            <button onclick="searchByName()" ke class="btn btn-dark">Search</button>
+        </div>
+        <div class="row row-cols-4 mb-4">
+
+        </div>
+        <div class="messageBox">
+            <h3>Message Box</h3>
+            <div class="d-flex w-auto flex-column justify-content-center align-items-center">
+                <input name="email" type="email" class="form-control w-auto mb-3 "/>
+                <textarea name="contentMessage" rows="5" class="form-control w-auto mb-3" placeholder="Insert here your message"></textarea>
+                <button class="btn btn-success" onClick="sendMessage()">Send</button>
+            </div>
+        </div>
+        <script src="~/js/Client/functions.js"></script>
+
+       
+}

@@ -1,0 +1,23 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Add new Category";
+
+}
+
+
+<form asp-controller="Categories" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+
+
+    <div class="mb-3">
+        <label for="Name">Name:</label>
+        <input type="text" asp-for="@Model.Name" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <button class="btn btn-secondary" type="reset">Reset</button>
+    <button class="btn btn-info" type="submit">Add</button>
+
+
+</form>

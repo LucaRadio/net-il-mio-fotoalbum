@@ -1,0 +1,66 @@
+﻿@model PhotoData
+
+@{
+    ViewData["Title"] = "Add new photo";
+
+}
+
+
+
+
+<form asp-controller="Photos" asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+
+
+    <div class="mb-3">
+        <label for="Name">Name:</label>
+        <input type="text" asp-for="Photo.Title" />
+        <span asp-validation-for="Photo.Title" class="text-danger"></span>
+    </div>
+    
+    
+    <div class="mb-3">
+        <label for="Description">Description:</label>
+        <textarea type="text" asp-for="Photo.Description" rows="3"></textarea>
+        <span asp-validation-for="Photo.Description" class="text-danger"></span>
+    </div>
+    
+    
+    <div class="mb-3">
+        <label for="Img">Photo:</label>
+        <input type="file" asp-for="Photo.Upload" rows="3"></input>
+        <span asp-validation-for="Photo.Upload" class="text-danger"></span>
+    </div>
+    
+    <div class="mb-3">
+        <label for="Visibility">Visibility:</label>
+        <input type="radio" asp-for="Photo.Visibility" value="true" rows="3" checked></input>
+        <label for="yes">Yes</label>
+        <input type="radio" asp-for="Photo.Visibility" value="false" rows="3"></input>
+        <label for="no">No</label>
+    </div>
+    
+    
+    <div class="mb-3">
+        <label for="Categories">Categories:</label>
+        @foreach(Category i in Model.Categories)
+        {
+            
+   
+        <label>@i.Name</label>
+            <input 
+                   id="SelectedCategory"
+                   name="SelectedCategory"
+                   type="checkbox"
+                   value="@i.Id" />
+        }
+        
+
+    </div>
+    
+    <button class="btn btn-warning" type="reset">Reset</button>
+    <button class="btn btn-warning" type="submit">Add</button>
+
+
+</form>
