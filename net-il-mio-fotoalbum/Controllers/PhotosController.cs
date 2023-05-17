@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using net_il_mio_fotoalbum.Models;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace net_il_mio_fotoalbum.Controllers
 {
@@ -19,6 +21,7 @@ namespace net_il_mio_fotoalbum.Controllers
         }
         public IActionResult Index(string? search)
         {
+
 
             Context db = new Context();
             if (string.IsNullOrEmpty(search))
@@ -72,16 +75,18 @@ namespace net_il_mio_fotoalbum.Controllers
                     Visibility = data.Photo.Visibility
 
                 };
-                if (data.SelectedCategory != null)
-                {
-                    List<Category> categoriesToInsert = new();
-                    foreach (int i in data.SelectedCategory)
-                    {
-                        Category toAdd = db.Categories.Where(item => item.Id == i).FirstOrDefault();
-                        categoriesToInsert.Add(toAdd);
-                    }
-                    photoToCreate.Category = categoriesToInsert;
-                }
+
+                refreshCategoriesSelected(data.SelectedCategory, photoToCreate, db);
+                //if (data.SelectedCategory != null)
+                //{
+                //    List<Category> categoriesToInsert = new();
+                //    foreach (int i in data.SelectedCategory)
+                //    {
+                //        Category toAdd = db.Categories.Where(item => item.Id == i).FirstOrDefault();
+                //        categoriesToInsert.Add(toAdd);
+                //    }
+                //    photoToCreate.Category = categoriesToInsert;
+                //}
 
                 using (var ms = new MemoryStream())
                 {
@@ -188,20 +193,22 @@ namespace net_il_mio_fotoalbum.Controllers
                 photoToEdit.Description = data.Photo.Description;
                 photoToEdit.Visibility = data.Photo.Visibility;
 
-                if (data.SelectedCategory != null)
-                {
-                    photoToEdit.Category.Clear();
-                    List<Category> newCategories = new();
-                    foreach (int i in data.SelectedCategory)
-                    {
-                        var toAdd = db.Categories.Where(c => c.Id == i).FirstOrDefault();
-                        if (toAdd != null)
-                        {
-                            newCategories.Add(toAdd);
-                        }
-                    }
-                    photoToEdit.Category = newCategories;
-                }
+                refreshCategoriesSelected(data.SelectedCategory, photoToEdit, db);
+
+                //if (data.SelectedCategory != null)
+                //{
+                //    photoToEdit.Category.Clear();
+                //    List<Category> newCategories = new();
+                //    foreach (int i in data.SelectedCategory)
+                //    {
+                //        var toAdd = db.Categories.Where(c => c.Id == i).FirstOrDefault();
+                //        if (toAdd != null)
+                //        {
+                //            newCategories.Add(toAdd);
+                //        }
+                //    }
+                //    photoToEdit.Category = newCategories;
+                //}
 
 
                 if (data.Photo.Upload != null)
@@ -260,6 +267,23 @@ namespace net_il_mio_fotoalbum.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public void refreshCategoriesSelected(List<int> s, Photo photoToEdit, Context db)
+        {
+            if (s != null)
+            {
+                photoToEdit.Category?.Clear();
+                List<Category> newCategories = new();
+                foreach (int i in s)
+                {
+                    var toAdd = db.Categories.Where(c => c.Id == i).FirstOrDefault();
+                    if (toAdd != null)
+                    {
+                        newCategories.Add(toAdd);
+                    }
+                }
+                photoToEdit.Category = newCategories;
+            }
         }
     }
 }

@@ -12,6 +12,9 @@ namespace net_il_mio_fotoalbum.Models
         public string Description { get; set; }
         public byte[]? Content { get; set; }
         public bool Visibility { get; set; }
+        public int UserId { get; set; }
+
+        public Iden
 
 
         public List<Category>? Category { get; set; }

@@ -21,7 +21,7 @@
 
                 <td>@p.Id</td>
                 <td>@p.Title</td>
-                <td>@((p.Description.Length > 20) ? p.Description.Substring(0, 50) + " ..." : p.Description)</td>
+                <td>@((p.Description.Length > 20) ? p.Description.Substring(0, 20) + " ..." : p.Description)</td>
                 <td>@p.Visibility</td>
                 <td>
                     <ul>
