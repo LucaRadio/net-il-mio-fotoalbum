@@ -5,7 +5,7 @@ using net_il_mio_fotoalbum.Models;
 
 namespace net_il_mio_fotoalbum.Controllers.API
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PhotosController : ControllerBase
     {
@@ -25,5 +25,27 @@ namespace net_il_mio_fotoalbum.Controllers.API
                 return Ok(photos);
             }
         }
+
+        [HttpGet]
+        public IActionResult Show(int id)
+        {
+
+            using (Context db = new())
+            {
+                Photo toShow = db.Photos.Include(p => p.Category).Where(p => p.Id == id).FirstOrDefault();
+                if (toShow != null)
+                {
+                    return Ok(toShow);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+
+
+        }
+
+
     }
 }

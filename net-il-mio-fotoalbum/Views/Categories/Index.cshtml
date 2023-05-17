@@ -1,0 +1,90 @@
+﻿@model List<Category>
+@{
+
+}
+@if ((bool)ViewBag.isAdd)
+{
+     <div style="position: absolute; top: 0; right: 0;" class="p-3">
+        <div class="toast d-block bg-success text-white" role="alert" data-autohide="true" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header d-flex">
+                <strong class="flex-grow-1">Category Added</strong>
+            </div>
+            <div class="toast-body">
+                Category was correctly Added.
+            </div>
+        </div>
+    </div>
+}
+
+        @if (ViewBag.isDel == null)
+        {
+            
+        }
+        else if ((bool)ViewBag.isDel)
+            {
+                <div style="position: absolute; top: 0; right: 0;" class="p-3">
+                    <div class="toast d-block bg-success text-white" role="alert" data-autohide="true" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header d-flex">
+                            <strong class="flex-grow-1">Delete succesfull</strong>
+                        </div>
+                        <div class="toast-body">
+                            Category was deleted!
+                        </div>
+                    </div>
+                </div>
+            }
+        else if (!(bool)ViewBag.isDel)
+            {
+                <div style="position: absolute; top: 0; right: 0;" class="p-3">
+                    <div class="toast d-block bg-danger text-white" role="alert" data-autohide="true" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header d-flex">
+                            <strong class="flex-grow-1">Delete failure</strong>
+                        </div>
+                        <div class="toast-body">
+                            Somethings went wrong. Retry!
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="text-center">
+
+        <a class="btn btn-warning" asp-controller="Categories" asp-action="Create">Add a category</a>
+
+            </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (Category i in Model)
+            {
+                <tr>
+                    <td>@i.Name</td>
+                    <td>
+                        <form asp-controller="Categories" class="text-end" asp-action="delete" asp-route-id="@i.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
+
+                        </form>
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <script>
+        clearMessage();
+        function clearMessage(){
+            setTimeout(()=>{
+            const toast = document.querySelector(".toast");
+            toast?.classList.remove("d-block");
+            
+            },3000)
+        }
+    </script>

@@ -1,0 +1,57 @@
+﻿@model List<Photo>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>TITLE</th>
+            <th>DESCRIPTION</th>
+            <th>VISIBILITY</th> 
+            <th>Categories</th> 
+            <th></th> 
+            <th></th> 
+            <th></th> 
+        </tr>
+    </thead>
+    <tbody> 
+        @foreach(Photo p in Model)
+        {
+            <tr>
+
+                <td>@p.Id</td>
+                <td>@p.Title</td>
+                <td>@((p.Description.Length > 20) ? p.Description.Substring(0, 50) + " ..." : p.Description)</td>
+                <td>@p.Visibility</td>
+                <td>
+                    <ul>
+
+                    @foreach(Category c in p.Category)
+                    {
+                        <li>
+                        @c.Name
+                        </li>
+
+                    }
+                    </ul>
+                </td>
+                <td>
+                    <a href="@Url.Action("Details","Photos",new{id=@p.Id})" class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Photos",new{id=@p.Id})" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
+
+                </td>
+                <td>
+                    <form asp-controller="Photos" asp-route-id="@p.Id" asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                    <button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+
+
+</table>

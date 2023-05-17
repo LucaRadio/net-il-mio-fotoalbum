@@ -3,6 +3,10 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+
+
+    
 @if (User.IsInRole("Admin"))
 {
     <div class="text-center">
@@ -16,14 +20,14 @@
             @foreach (Photo i in Model)
             {
                 <div class="col">
-                    <div class="card">
-                        <img class="card-img-top" src="data:image/jpg;base64,@i.ImageData" alt="Card image cap">
-                        <div class="card-body">
+                    <div href="@Url.Action("Details","Photos",new{id= i.Id})"  class="card text-decoration-none bg-dark h-100">
+                        <img class="card-img-top" src="data:image/jpg;base64,@i.ImageData">
+                        <div class="card-body text-white">
                             <h5 class="card-title">@i.Title</h5>
                             <p class="card-text">@((i.Description.Length > 50) ? i.Description.Substring(0, 50) + " ..." : i.Description)</p>
                             <div>
                                 <a href="@Url.Action("Edit","Photos", new{id = i.Id})" class="btn btn-warning">Edit</a>
-                                <a href="@Url.Action("Show","Photos", new{id = i.Id})" class="btn btn-primary">Details</a>
+                                <a href="@Url.Action("Details","Photos", new{id = i.Id})" class="btn btn-primary">Details</a>
                                 <form asp-controller="Photos" asp-route-id="@i.Id" asp-action="Delete" method="post" class="d-inline-block">
                                     @Html.AntiForgeryToken()
 
@@ -48,13 +52,15 @@ else
         </div>
         <div class="messageBox">
             <h3>Message Box</h3>
-            <div class="d-flex w-auto flex-column justify-content-center align-items-center">
+            <form enctype="multipart/form-data" onsubmit="event.preventDefault()" class="d-flex w-auto flex-column justify-content-center align-items-center">
                 <input name="email" type="email" class="form-control w-auto mb-3 "/>
                 <textarea name="contentMessage" rows="5" class="form-control w-auto mb-3" placeholder="Insert here your message"></textarea>
                 <button class="btn btn-success" onClick="sendMessage()">Send</button>
-            </div>
+            </form>
         </div>
-        <script src="~/js/Client/functions.js"></script>
+        @section scripts{
+    <script src="~/js/Client/axiosFunctions.js"></script>
+        }
 
        
 }

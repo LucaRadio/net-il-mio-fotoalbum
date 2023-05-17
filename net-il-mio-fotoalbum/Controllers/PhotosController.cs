@@ -9,8 +9,17 @@ namespace net_il_mio_fotoalbum.Controllers
     public class PhotosController : Controller
     {
 
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public IActionResult All()
+        {
+
+            Context db = new Context();
+            List<Photo> photos = db.Photos.Include(c => c.Category).ToList();
+            return View(photos);
+        }
         public IActionResult Index(string? search)
         {
+
             Context db = new Context();
             if (string.IsNullOrEmpty(search))
             {
@@ -91,13 +100,13 @@ namespace net_il_mio_fotoalbum.Controllers
         }
 
         [HttpGet]
-        public IActionResult Show(int id)
+        public IActionResult Details(int id)
         {
             Context db = new();
             Photo photoDetail = db.Photos.Include(p => p.Category).Where(p => p.Id == id).FirstOrDefault();
             if (photoDetail != null)
             {
-                return View(photoDetail);
+                return View("Show", photoDetail);
 
             }
             else
@@ -150,7 +159,24 @@ namespace net_il_mio_fotoalbum.Controllers
             {
                 List<Category> allCat = db.Categories.ToList();
                 data.Categories = allCat;
-                return View(allCat);
+
+                if (data.SelectedCategory != null)
+                {
+                    List<Category> newCategories = new();
+                    foreach (int i in data.SelectedCategory)
+                    {
+                        var toAdd = db.Categories.Where(c => c.Id == i).FirstOrDefault();
+                        if (toAdd != null)
+                        {
+                            newCategories.Add(toAdd);
+                        }
+                    }
+                    data.Photo.Category = newCategories;
+                }
+
+
+
+                return View(data);
 
             }
 
@@ -195,6 +221,7 @@ namespace net_il_mio_fotoalbum.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             Context db = new();
@@ -207,6 +234,22 @@ namespace net_il_mio_fotoalbum.Controllers
             }
             return RedirectToAction("NotFound");
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangeVis(int id, bool visibility)
+        {
+            Context db = new();
+            Photo photo = db.Photos.Where(p => p.Id == id).FirstOrDefault();
+            photo.Visibility = visibility;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
+        }
+
+
+
 
 
 

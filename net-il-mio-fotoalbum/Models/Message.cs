@@ -11,17 +11,7 @@ namespace net_il_mio_fotoalbum.Models
         public string emailSender { get; set; }
 
         public string messageContent { get; set; }
-        public DateTime created_at
-        {
-            get
-            {
-                return created_at;
-            }
-            set
-            {
-                created_at = DateTime.UtcNow;
-            }
-        }
+        public DateTime? created_at { get; set; }
 
     }
 }

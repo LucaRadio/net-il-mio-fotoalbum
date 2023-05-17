@@ -31,7 +31,10 @@
         <label for="Img">Photo:</label>
         <input type="file" asp-for="Photo.Upload" rows="3"></input>
         <span asp-validation-for="Photo.Upload" class="text-danger d-block"></span>
-        <img class="img-thumbnail w-25" src="data:image/jpg;base64,@Model.Photo.ImageData"></img>
+        @if(Model.Photo.ImageData !="")
+        {
+            <img class="img-thumbnail w-25" src="data:image/jpg;base64,@Model.Photo.ImageData"></img>
+        }
     </div>
 
     <div class="mb-3">
