@@ -72,7 +72,8 @@ namespace net_il_mio_fotoalbum.Controllers
                 {
                     Title = data.Photo.Title,
                     Description = data.Photo.Description,
-                    Visibility = data.Photo.Visibility
+                    Visibility = data.Photo.Visibility,
+                    UserEmail = data.Photo.UserEmail
 
                 };
 

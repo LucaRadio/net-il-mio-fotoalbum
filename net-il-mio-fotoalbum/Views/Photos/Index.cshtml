@@ -5,9 +5,7 @@
 
 
 
-
-    @User.Identity.Name
-@if (User.IsInRole("Admin") )
+@if (User.IsInRole("Admin"))
 {
     <div class="text-center">
         <form asp-controller="Photos" asp-action="Index" class="justify-content-center d-flex mb-3">
@@ -20,19 +18,24 @@
             @foreach (Photo i in Model)
             {
                 <div class="col">
-                    <div href="@Url.Action("Details","Photos",new{id= i.Id})"  class="card text-decoration-none bg-dark h-100">
+
+                    <div class="position-relative card d-block text-decoration-none bg-dark h-100">
+                        <a class="linkable" href ="@Url.Action("Details","Photos",new{id= i.Id})"></a>
                         <img class="card-img-top" src="data:image/jpg;base64,@i.ImageData">
                         <div class="card-body text-white">
                             <h5 class="card-title">@i.Title</h5>
                             <p class="card-text">@((i.Description.Length > 50) ? i.Description.Substring(0, 50) + " ..." : i.Description)</p>
                             <div>
-                                <a href="@Url.Action("Edit","Photos", new{id = i.Id})" class="btn btn-warning">Edit</a>
-                                <a href="@Url.Action("Details","Photos", new{id = i.Id})" class="btn btn-primary">Details</a>
-                                <form asp-controller="Photos" asp-route-id="@i.Id" asp-action="Delete" method="post" class="d-inline-block">
-                                    @Html.AntiForgeryToken()
+                                @if(User.Identity.Name == i.UserEmail || User.IsInRole("SuperAdmin"))
+                                {
+                                    <a class="position-relative to-take-above btn btn-warning" href="@Url.Action("Edit","Photos", new{id = i.Id})" >Edit</a>
+                                    <a class="position-relative to-take-above btn btn-primary" href="@Url.Action("Details","Photos", new{id = i.Id})" >Details</a>
+                                    <form class="position-relative to-take-above"  asp-controller="Photos" asp-route-id="@i.Id" asp-action="Delete" method="post" class="d-inline-block">
+                                        @Html.AntiForgeryToken()
 
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
-                                </form>
+                                        <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
+                                    </form>
+                                }
                             </div>
                         </div>
                     </div>

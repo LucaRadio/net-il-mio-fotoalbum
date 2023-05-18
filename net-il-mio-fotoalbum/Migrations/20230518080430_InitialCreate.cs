@@ -64,19 +64,18 @@ namespace net_il_mio_fotoalbum.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "photos",
+                name: "messages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Visibility = table.Column<bool>(type: "bit", nullable: false)
+                    emailSender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    messageContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_photos", x => x.Id);
+                    table.PrimaryKey("PK_messages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +185,28 @@ namespace net_il_mio_fotoalbum.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "photos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Visibility = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_photos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CategoryPhoto",
                 columns: table => new
                 {
@@ -252,6 +273,11 @@ namespace net_il_mio_fotoalbum.Migrations
                 name: "IX_CategoryPhoto_PhotoId",
                 table: "CategoryPhoto",
                 column: "PhotoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_photos_UserId",
+                table: "photos",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -276,16 +302,19 @@ namespace net_il_mio_fotoalbum.Migrations
                 name: "CategoryPhoto");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "messages");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "categories");
 
             migrationBuilder.DropTable(
                 name: "photos");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

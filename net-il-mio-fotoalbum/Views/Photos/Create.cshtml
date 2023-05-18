@@ -11,7 +11,7 @@
 <form asp-controller="Photos" asp-action="Create" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
-
+    <input type="hidden" asp-for="Photo.UserEmail" value="@User.Identity.Name"></input>
 
     <div class="mb-3">
         <label for="Name">Name:</label>
