@@ -22,7 +22,7 @@ namespace net_il_mio_fotoalbum.Controllers.API
                     n.emailSender = i.emailSender;
                     n.messageContent = i.messageContent;
                     n.created_at = DateTime.UtcNow;
-                    db.messages.Add(n);
+                    db.Messages.Add(n);
                     db.SaveChanges();
                 }
                 return Ok();

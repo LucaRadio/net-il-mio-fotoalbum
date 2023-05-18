@@ -31,7 +31,7 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             if (ModelState.IsValid)
             {
-                Context db = new Context();
+                Context db = new();
                 db.Categories.Add(cat);
                 db.SaveChanges();
                 ViewBag.isAdd = true;

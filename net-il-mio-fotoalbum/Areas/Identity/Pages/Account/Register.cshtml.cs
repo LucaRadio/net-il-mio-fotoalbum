@@ -2,14 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using net_il_mio_fotoalbum.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace net_il_mio_fotoalbum.Areas.Identity.Pages.Account
 {
@@ -120,6 +122,14 @@ namespace net_il_mio_fotoalbum.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    Context db = new Context();
+                    IdentityUser us = db.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+                    IdentityRole role = db.Roles.Where(r => r.Name == "Admin").FirstOrDefault();
+                    IdentityUserRole<string> ur = new();
+                    ur.UserId = us.Id;
+                    ur.RoleId = role.Id;
+                    db.SaveChanges();
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
