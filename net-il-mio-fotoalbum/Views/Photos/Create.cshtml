@@ -6,61 +6,77 @@
 }
 
 
+<div class="row my-5 justify-content-center">
+        <div class="col-6">
 
-
-<form asp-controller="Photos" asp-action="Create" method="post" enctype="multipart/form-data">
+<form asp-controller="Photos" class="form-control p-4 bg-dark text-warning" asp-action="Create" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
+<h1 class="text-warning mb-3 text-center">Add a Photo</h1>
 
     <input type="hidden" asp-for="Photo.UserEmail" value="@User.Identity.Name"></input>
 
-    <div class="mb-3">
-        <label for="Name">Name:</label>
-        <input type="text" asp-for="Photo.Title" />
+    <div class="mb-3 input-group">
+                <label class="fw-bold text-primary input-group-text">Title:</label>
+        <input type="text" class="form-control shadow-none" asp-for="Photo.Title" />
         <span asp-validation-for="Photo.Title" class="text-danger"></span>
     </div>
     
-    
-    <div class="mb-3">
-        <label for="Description">Description:</label>
-        <textarea type="text" asp-for="Photo.Description" rows="3"></textarea>
+    <hr/>
+    <div class="input-group mb-3">
+                <label class="fw-bold text-primary input-group-text">Description:</label>
+        <textarea type="text" asp-for="Photo.Description" class="form-control shadow-none" rows="3"></textarea>
         <span asp-validation-for="Photo.Description" class="text-danger"></span>
     </div>
+    <hr/>
     
     
-    <div class="mb-3">
-        <label for="Img">Photo:</label>
-        <input type="file" asp-for="Photo.Upload" rows="3"></input>
+    <div class="input-group mb-3">
+        <input type="file" class="form-control" asp-for="Photo.Upload" rows="3"></input>
         <span asp-validation-for="Photo.Upload" class="text-danger"></span>
     </div>
+    <hr/>
     
-    <div class="mb-3">
-        <label for="Visibility">Visibility:</label>
-        <input type="radio" asp-for="Photo.Visibility" value="true" rows="3" checked></input>
+                <label class="fw-bold text-primary mb-3">Visibility:</label>
+    <div class="form-check mb-3 d-inline-block">
         <label for="yes">Yes</label>
-        <input type="radio" asp-for="Photo.Visibility" value="false" rows="3"></input>
+        <input id="yes" type="radio" name="vis" asp-for="Photo.Visibility" class="form-check-input" value="true" rows="3" checked></input>
+
+    </div>
+
+            <div class="form-check mb-3 d-inline-block">
+        <input id="no" name="vis" type="radio" asp-for="Photo.Visibility" class="form-check-input" value="false" rows="3"></input>
         <label for="no">No</label>
     </div>
     
+    <hr/>
     
-    <div class="mb-3">
-        <label for="Categories">Categories:</label>
+        <div class="fw-bold text-primary">Categories:
+            </div>
         @foreach(Category i in Model.Categories)
         {
-            
+            <div class="form-check mb-3 d-inline-block">
+
+               <input  class="form-check-input"
+               id="@("SelectedCategory" + i.Id)"
+               name="SelectedCategory"
+               type="checkbox"
+               value="@i.Id" />
+               <label for="@("SelectedCategory" + i.Id)" class="form-check-label me-3">
+                    @i.Name
    
-        <label>@i.Name</label>
-            <input 
-                   id="SelectedCategory"
-                   name="SelectedCategory"
-                   type="checkbox"
-                   value="@i.Id" />
+               </label>
+            
+            </div>
         }
         
 
-    </div>
     
-    <button class="btn btn-warning" type="reset">Reset</button>
+    <hr/>
+    <button class="btn btn-outline-light" type="reset">Reset</button>
     <button class="btn btn-warning" type="submit">Add</button>
 
 
 </form>
+    </div>
+  
+</div>

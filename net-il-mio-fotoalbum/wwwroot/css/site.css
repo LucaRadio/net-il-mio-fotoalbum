@@ -32,3 +32,50 @@ body {
 .to-take-above{
     z-index:20;
 }
+.aside {
+    border: 2px solid #ffc008;
+    padding: 1rem 1.5rem;
+    border-radius: 25px;
+    box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+    -webkit-box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+    -moz-box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+    background: #212529;
+    position:sticky;
+    top:90px;
+}
+
+.card:hover {
+    transition:0.3s;
+    box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+    -webkit-box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+    -moz-box-shadow: 12px 10px 37px -5px rgba(0,0,0,0.64);
+}
+
+.card>img{
+    height:200px;
+    max-height:auto;
+    object-fit:cover;
+}
+.box {
+width:calc(100% - 1rem);
+margin-left:1rem;
+}
+main{
+    padding-top:57px;
+}
+
+nav{
+    z-index:100;
+}
+
+.tt {
+    position: sticky;
+    top: 0px;
+    right: 0;
+    z-index: 200;
+}
+
+hr {
+    height: 2px;
+    background: #ffca2b
+}

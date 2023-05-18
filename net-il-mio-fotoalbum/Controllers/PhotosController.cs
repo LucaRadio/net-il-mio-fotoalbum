@@ -11,7 +11,7 @@ namespace net_il_mio_fotoalbum.Controllers
     public class PhotosController : Controller
     {
 
-        [Authorize(Roles = "Admin,SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult All()
         {
 
@@ -19,7 +19,7 @@ namespace net_il_mio_fotoalbum.Controllers
             List<Photo> photos = db.Photos.Include(c => c.Category).ToList();
             return View(photos);
         }
-        public IActionResult Index(string? search)
+        public IActionResult Index(string? search, bool? isSuccess)
         {
 
 
@@ -27,11 +27,13 @@ namespace net_il_mio_fotoalbum.Controllers
             if (string.IsNullOrEmpty(search))
             {
                 List<Photo> photos = db.Photos.Include(c => c.Category).Where(p => p.Visibility == true).ToList();
+                ViewBag.isSuccess = isSuccess;
                 return View(photos);
             }
             else
             {
                 List<Photo> photos = db.Photos.Include(c => c.Category).Where(p => p.Visibility == true && p.Title.Contains(search)).ToList();
+                ViewBag.isSuccess = isSuccess;
                 return View(photos);
 
             }
@@ -78,16 +80,7 @@ namespace net_il_mio_fotoalbum.Controllers
                 };
 
                 refreshCategoriesSelected(data.SelectedCategory, photoToCreate, db);
-                //if (data.SelectedCategory != null)
-                //{
-                //    List<Category> categoriesToInsert = new();
-                //    foreach (int i in data.SelectedCategory)
-                //    {
-                //        Category toAdd = db.Categories.Where(item => item.Id == i).FirstOrDefault();
-                //        categoriesToInsert.Add(toAdd);
-                //    }
-                //    photoToCreate.Category = categoriesToInsert;
-                //}
+
 
                 using (var ms = new MemoryStream())
                 {
@@ -100,7 +93,7 @@ namespace net_il_mio_fotoalbum.Controllers
                 db.SaveChanges();
 
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { isSuccess = ViewBag.isSuccess = true });
 
             }
         }
@@ -123,6 +116,7 @@ namespace net_il_mio_fotoalbum.Controllers
 
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
 
@@ -133,15 +127,23 @@ namespace net_il_mio_fotoalbum.Controllers
 
 
             Photo photoToEdit = db.Photos.Include(p => p.Category).Where(p => p.Id == id).FirstOrDefault();
-            if (photoToEdit != null)
+            if (User.Identity.Name == photoToEdit.UserEmail || User.IsInRole("SuperAdmin"))
             {
-                data.Photo = photoToEdit;
-                return View(data);
+                if (photoToEdit != null)
+                {
+                    data.Photo = photoToEdit;
+                    return View(data);
+
+                }
+                else
+                {
+                    return View(data);
+                }
 
             }
             else
             {
-                return View(data);
+                return View("Unauthorize");
             }
 
 
@@ -166,19 +168,8 @@ namespace net_il_mio_fotoalbum.Controllers
                 List<Category> allCat = db.Categories.ToList();
                 data.Categories = allCat;
 
-                if (data.SelectedCategory != null)
-                {
-                    List<Category> newCategories = new();
-                    foreach (int i in data.SelectedCategory)
-                    {
-                        var toAdd = db.Categories.Where(c => c.Id == i).FirstOrDefault();
-                        if (toAdd != null)
-                        {
-                            newCategories.Add(toAdd);
-                        }
-                    }
-                    data.Photo.Category = newCategories;
-                }
+
+                refreshCategoriesSelected(data.SelectedCategory, data.Photo, db);
 
 
 
@@ -224,7 +215,7 @@ namespace net_il_mio_fotoalbum.Controllers
                 db.SaveChanges();
 
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { isSuccess = ViewBag.isSuccess = true });
 
         }
 
@@ -238,12 +229,12 @@ namespace net_il_mio_fotoalbum.Controllers
             {
                 db.Photos.Remove(photoToDelete);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { isSuccess = ViewBag.isSuccess = true });
             }
-            return RedirectToAction("NotFound");
+            return RedirectToAction("NotFound", new { isSuccess = ViewBag.isSuccess = false });
         }
 
-
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ChangeVis(int id, bool visibility)
@@ -269,11 +260,11 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public void refreshCategoriesSelected(List<int> s, Photo photoToEdit, Context db)
+        public void refreshCategoriesSelected(List<int> s, Photo photo, Context db)
         {
             if (s != null)
             {
-                photoToEdit.Category?.Clear();
+                photo.Category?.Clear();
                 List<Category> newCategories = new();
                 foreach (int i in s)
                 {
@@ -283,7 +274,7 @@ namespace net_il_mio_fotoalbum.Controllers
                         newCategories.Add(toAdd);
                     }
                 }
-                photoToEdit.Category = newCategories;
+                photo.Category = newCategories;
             }
         }
     }

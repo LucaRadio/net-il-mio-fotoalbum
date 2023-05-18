@@ -12,9 +12,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Photos" asp-action="Index">Photo album</a>
+        <nav class="fw-bold navbar position-fixed w-100 navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand text-warning" asp-controller="Photos" asp-action="Index">Photo album</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,18 +22,21 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Photos" asp-action="Index">Home</a>
+                            <a class="nav-link text-warning" asp-area="" asp-controller="Photos" asp-action="Index">Home</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning" asp-controller="Photos" asp-action="All">All Photos</a>
+                                </li>
+                            }
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Photos" asp-action="All">All Photos</a>
+                                <a class="nav-link text-warning" asp-area="" asp-controller="Photos" asp-action="Create">Add Photo</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Photos" asp-action="Create">Add Photo</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category List</a>
+                                <a class="nav-link text-warning" asp-area="" asp-controller="Categories" asp-action="Index">Category List</a>
                             </li>
                         }
 
@@ -44,6 +47,38 @@
         </nav>
     </header>
     <div class="container">
+        @if (ViewBag.isSuccess == null)
+        {
+
+        }
+        else if ((bool)ViewBag.isSuccess)
+        {
+            <div class="tt ms-auto p-3">
+                <div class="toast ms-auto d-block bg-success text-white" role="alert" data-autohide="true" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header d-flex">
+                        <strong class="flex-grow-1">Operation succesfull</strong>
+                    </div>
+                    <div class="toast-body">
+                        Operation was completed successfully!
+                    </div>
+                </div>
+            </div>
+            ViewBag.isSuccess = null;
+        }
+        else if (!(bool)ViewBag.isSuccess)
+        {
+            <div style="position: sticky; top: 0; right: 0;" class="tt p-3">
+                <div class="toast ms-auto d-block bg-danger text-white" role="alert" data-autohide="true" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header d-flex">
+                        <strong class="flex-grow-1">Failure</strong>
+                    </div>
+                    <div class="toast-body">
+                        Somethings went wrong. Retry!
+                    </div>
+                </div>
+            </div>
+            ViewBag.isSuccess = null;
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

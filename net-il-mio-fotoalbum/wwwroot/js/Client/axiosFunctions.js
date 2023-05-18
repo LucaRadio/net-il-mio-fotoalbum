@@ -23,7 +23,7 @@ function searchByName() {
                                             <a href="${window.location.origin + '/Photos/Details/' + singlePhoto.id}" class="card text-decoration-none bg-dark h-100">
                                             <img class="card-img-top" src ="data:image/jpg;base64,${singlePhoto.content}">
                                             <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title text-white">${singlePhoto.title}</h5>
+                                                <h5 class="card-title text-info">${singlePhoto.title}</h5>
                                                 <p class="card-text text-white flex-grow-1"> ${(singlePhoto.description.length > 50) ? singlePhoto.description.substring(0, 50) + " ..." : singlePhoto.description}</p>
                                                 
                                                 </div>
