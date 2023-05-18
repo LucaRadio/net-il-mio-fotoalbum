@@ -48,36 +48,33 @@
             }
             <div class="text-center">
 
-        <a class="btn btn-warning" asp-controller="Categories" asp-action="Create">Add a category</a>
 
+
+<div class="row justify-content-center rounded ">
+    <div class="col-6 bg-dark text-warning border p-4">
+            <h3 class="text-start fw-bold">Name</h3>
+
+
+
+        @foreach (Category i in Model)
+        {
+            <div class="d-flex">
+                <div class="fw-bold flex-grow-1">@i.Name</div>
+                <div>
+                    <form asp-controller="Categories" class="text-end" asp-action="delete" asp-route-id="@i.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
+
+                    </form>
+
+                </div>
             </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th></th>
+            <hr/>
+        }
 
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (Category i in Model)
-            {
-                <tr>
-                    <td>@i.Name</td>
-                    <td>
-                        <form asp-controller="Categories" class="text-end" asp-action="delete" asp-route-id="@i.Id" method="post">
-                            @Html.AntiForgeryToken()
-                            <button class="btn btn-danger" onclick="return confirm('Are you sure ?')">Delete</button>
-
-                        </form>
-
-                    </td>
-                </tr>
-            }
-
-        </tbody>
-    </table>
+        <a class="btn btn-warning" asp-controller="Categories" asp-action="Create">Add a category</a>
+        </div>
+    </div>
     <script>
         clearMessage();
         function clearMessage(){
